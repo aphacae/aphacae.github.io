@@ -6,10 +6,13 @@
 
         <!--Styles-->
         <link rel="stylesheet" href="../dist/css/styles.css" />
+        <link rel="stylesheet" href="https://dawneggleton.github.io/jcink-temps/sslp/characters.css" />
 
         <!--Fonts-->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Palanquin+Dark:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Palanquin:wght@100;200;300;400;500;600;700&amp;display=swap" rel="stylesheet">
 
         <!--Icons-->
 		<link href="https://dawneggleton.github.io/css/all.css" rel="stylesheet" />
@@ -18,6 +21,7 @@
 		<script type='text/javascript' src='https://files.jcink.net/html/jquery-1.7.2.min.js'></script>
 		<script type='text/javascript' src='https://files.jcink.net/html/jquery.cookie-1.3.1.js'></script> 
 		<script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/2.2.2/isotope.pkgd.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
         <!--Settings-->
         <script type='text/javascript' src='../dist/js/settings.js'></script>
@@ -25,6 +29,7 @@
 
         <!--Scripts-->
         <script type='text/javascript' src='../dist/js/functions.js'></script>
+        <script type='text/javascript' src='../dist/js/scripts.js'></script>
     </head>
     <body>
         <nav>
@@ -61,27 +66,43 @@
                 -->
             </ul>
         </nav>
-        <section>
-            <form id="add-character">
-                <label class="fullWidth">
-                    <b>Site</b>
-                    <select required id="site">
-                        <option value="">(select)</option>
-                    </select>
-                </label>
-                <label>
-                    <b>Character</b>
-                    <input required type="text" id="character" />
-                </label>
-                <label>
-                    <b>Character ID</b>
-                    <input required type="text" id="id" />
-                </label>
-                <button type="submit" class="fullWidth">Submit</button>
-            </form>
-        </section>
+        <section class="tracker charts">
+            <div class="chart">
+                <b>Last Reply</b>
+                <div class="chart--time"></div>
+            </div>
+            <div class="chart">
+                <b>Status</b>
+                <div class="chart--status"></div>
+            </div>
+            <div class="chart">
+                <b>Type</b>
+                <div class="chart--type"></div>
+            </div>
+            <div class="chart">
+                <b>Partners</b>
+                <div class="chart--partner"></div>
+            </div>
 
-        <!--Scripts-->
-        <script type='text/javascript' src='../dist/js/scripts.js'></script>
+            <script src="./../dist/js/charts.js"></script>
+            <script>
+                //set overall variables
+                //CHANGE HERE!! Change 'Sample Site' to the name of your site as seen in your Sites sheet; capitalization matters!!
+                let siteName = 'Sample Site';
+
+                //set class variables
+                let $container = $('#tracker--rows');
+
+                fetch(`${sheet}/Threads`)
+                .then((response) => response.json())
+                .then((threadData) => {
+                    let siteThreads = threadData.filter(item => item.Site.toLowerCase().trim() === siteName.toLowerCase().trim());
+                    let threads = loadThreads(siteThreads);
+
+                    console.log(threads);
+                    loadCharts(threads);
+                });
+            </script>
+        </section>
     </body>
 </html>
